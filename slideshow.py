@@ -14,6 +14,7 @@ from itertools import cycle
 img_cyc = None
 window = pyglet.window.Window(fullscreen=True)
 
+
 def update_image(dt):
     global img_cyc
     if img_cyc is None:

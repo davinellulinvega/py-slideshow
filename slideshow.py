@@ -38,11 +38,11 @@ def get_image_paths(input_dir='.'):
     return paths
 
 
-def get_scale(window, image):
+def get_scale(win, image):
     if image.width > image.height:
-        scale = float(window.width) / image.width
+        scale = float(win.width) / image.width
     else:
-        scale = float(window.height) / image.height
+        scale = float(win.height) / image.height
     return scale
 
 

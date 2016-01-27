@@ -8,23 +8,26 @@
 import argparse
 import os
 import pyglet
-from itertools import cycle
+from random import choice
 
 # Define global variables
-img_cyc = None
 window = pyglet.window.Window(fullscreen=True)
 sprite = None
 
 
 def update_image(dt):
-    global img_cyc
     global window
     global sprite
     if sprite is not None:
         sprite.delete()
-    if img_cyc is None:
-        img_cyc = cycle(image_paths)
-    next_img = img_cyc.next()
+
+    new_imgs = set(get_image_paths(args.dir))
+    print(new_imgs)
+    if image_paths != new_imgs :
+        image_paths.clear()
+        image_paths.update(new_imgs)
+
+    next_img = choice(list(image_paths))
     img_feat = os.path.splitext(next_img)
     if img_feat[1] == ".gif":
         img = pyglet.image.load_animation(next_img)
@@ -76,7 +79,7 @@ if __name__ == '__main__':
     parser.add_argument('-w', '--wait', help='Waiting time between each image update', type=float, dest='wait_time', default=3.0)
     args = parser.parse_args()
 
-    image_paths = get_image_paths(args.dir)
+    image_paths = set(get_image_paths(args.dir))
     update_image(0)
 
     pyglet.clock.schedule_interval(update_image, args.wait_time)

@@ -19,7 +19,6 @@ def update_image(dt):
     global img_cyc
     if img_cyc is None:
         img_cyc = cycle(image_paths)
-        print(image_paths)
     img = pyglet.image.load(img_cyc.next())
     sprite.image = img
     sprite.scale = get_scale(window, img)
@@ -44,6 +43,11 @@ def get_scale(win, image):
     else:
         scale = float(win.height) / image.height
     return scale
+
+
+@window.event
+def on_draw():
+    sprite.draw()
 
 
 if __name__ == '__main__':

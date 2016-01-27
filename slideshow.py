@@ -9,27 +9,22 @@
 import argparse
 import random
 import os
-
 import pyglet
+from itertools import cycle
 
-
-def update_pan_zoom_speeds():
-    global _pan_speed_x
-    global _pan_speed_y
-    global _zoom_speed
-    _pan_speed_x = random.randint(-8, 8)
-    _pan_speed_y = random.randint(-8, 8)
-    _zoom_speed = random.uniform(-0.02, 0.02)
-    return _pan_speed_x, _pan_speed_y, _zoom_speed
-
+# Define a global variable
+img_cyc = None
 
 def update_image(dt):
-    img = pyglet.image.load(random.choice(image_paths))
+    global img_cyc
+    if img_cyc is None:
+        img_cyc = cycle(image_paths)
+        print(image_paths)
+    img = pyglet.image.load(img_cyc.next())
     sprite.image = img
     sprite.scale = get_scale(window, img)
     sprite.x = 0
     sprite.y = 0
-    update_pan_zoom_speeds()
     window.clear()
 
 
@@ -60,7 +55,6 @@ def on_draw():
 
 
 if __name__ == '__main__':
-    _pan_speed_x, _pan_speed_y, _zoom_speed = update_pan_zoom_speeds()
 
     parser = argparse.ArgumentParser()
     parser.add_argument('dir', help='directory of images', nargs='?', default=os.getcwd())
@@ -68,7 +62,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     image_paths = get_image_paths(args.dir)
-    img = pyglet.image.load(random.choice(image_paths))
+    img = pyglet.image.load(image_paths[0])
     sprite = pyglet.sprite.Sprite(img)
     sprite.scale = get_scale(window, img)
 

@@ -13,14 +13,24 @@ from itertools import cycle
 # Define global variables
 img_cyc = None
 window = pyglet.window.Window(fullscreen=True)
+sprite = None
 
 
 def update_image(dt):
     global img_cyc
     global window
+    global sprite
+    if sprite is not None:
+        sprite.delete()
     if img_cyc is None:
         img_cyc = cycle(image_paths)
-    img = pyglet.image.load(img_cyc.next())
+    next_img = img_cyc.next()
+    img_feat = os.path.splitext(next_img)
+    if img_feat[1] == ".gif":
+        img = pyglet.image.load_animation(next_img)
+    else:
+        img = pyglet.image.load(next_img)
+    sprite = pyglet.sprite.Sprite(img)
     sprite.image = img
     sprite.scale = get_scale(window, img)
     pos_x = window.width / 2.0 - sprite.width / 2.0
@@ -41,10 +51,16 @@ def get_image_paths(input_dir='.'):
 
 
 def get_scale(win, image):
-    if image.width > image.height:
-        scale = float(win.width) / image.width
+    if isinstance(image, pyglet.image.Animation):
+        if image.get_max_width() > image.get_max_height():
+            scale = float(win.width) / image.get_max_width()
+        else:
+            scale = float(win.height) / image.get_max_height()
     else:
-        scale = float(win.height) / image.height
+        if image.width > image.height:
+            scale = float(win.width) / image.width
+        else:
+            scale = float(win.height) / image.height
     return scale
 
 
@@ -61,8 +77,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     image_paths = get_image_paths(args.dir)
-    img = pyglet.image.load(image_paths[0])
-    sprite = pyglet.sprite.Sprite(img)
     update_image(0)
 
     pyglet.clock.schedule_interval(update_image, args.wait_time)

@@ -2,18 +2,17 @@
 #
 #  Copyright (c) 2013, 2015, Corey Goldberg
 #
-#  Dev: https://github.com/cgoldberg/py-slideshow
 #  License: GPLv3
 
 
 import argparse
-import random
 import os
 import pyglet
 from itertools import cycle
 
-# Define a global variable
+# Define global variables
 img_cyc = None
+window = pyglet.window.Window(fullscreen=True)
 
 def update_image(dt):
     global img_cyc
@@ -44,14 +43,6 @@ def get_scale(window, image):
     else:
         scale = float(window.height) / image.height
     return scale
-
-
-window = pyglet.window.Window(fullscreen=True)
-
-
-@window.event
-def on_draw():
-    sprite.draw()
 
 
 if __name__ == '__main__':

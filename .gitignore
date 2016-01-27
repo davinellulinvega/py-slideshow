@@ -17,3 +17,5 @@ pip-log.txt
 .coverage
 .tox
 nosetests.xml
+.idea
+.idea/*

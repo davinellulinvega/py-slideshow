@@ -17,13 +17,16 @@ window = pyglet.window.Window(fullscreen=True)
 
 def update_image(dt):
     global img_cyc
+    global window
     if img_cyc is None:
         img_cyc = cycle(image_paths)
     img = pyglet.image.load(img_cyc.next())
     sprite.image = img
     sprite.scale = get_scale(window, img)
-    sprite.x = 0
-    sprite.y = 0
+    pos_x = window.width / 2.0 - sprite.width / 2.0
+    pos_y = window.height / 2.0 - sprite.height / 2.0
+    sprite.x = pos_x
+    sprite.y = pos_y
     window.clear()
 
 
@@ -60,7 +63,7 @@ if __name__ == '__main__':
     image_paths = get_image_paths(args.dir)
     img = pyglet.image.load(image_paths[0])
     sprite = pyglet.sprite.Sprite(img)
-    sprite.scale = get_scale(window, img)
+    update_image(0)
 
     pyglet.clock.schedule_interval(update_image, args.wait_time)
 

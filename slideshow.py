@@ -23,15 +23,6 @@ def update_pan_zoom_speeds():
     return _pan_speed_x, _pan_speed_y, _zoom_speed
 
 
-def update_pan(dt):
-    sprite.x += dt * _pan_speed_x
-    sprite.y += dt * _pan_speed_y
-
-
-def update_zoom(dt):
-    sprite.scale += dt * _zoom_speed
-
-
 def update_image(dt):
     img = pyglet.image.load(random.choice(image_paths))
     sprite.image = img
@@ -73,7 +64,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('dir', help='directory of images', nargs='?', default=os.getcwd())
-    parser.add_argument('-w', '--wait', help='Waiting time between each image update', type=float, dest=wait_time, default=3.0)
+    parser.add_argument('-w', '--wait', help='Waiting time between each image update', type=float, dest='wait_time', default=3.0)
     args = parser.parse_args()
 
     image_paths = get_image_paths(args.dir)
@@ -82,7 +73,5 @@ if __name__ == '__main__':
     sprite.scale = get_scale(window, img)
 
     pyglet.clock.schedule_interval(update_image, args.wait_time)
-    pyglet.clock.schedule_interval(update_pan, 1/60.0)
-    pyglet.clock.schedule_interval(update_zoom, 1/60.0)
 
     pyglet.app.run()

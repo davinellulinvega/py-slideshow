@@ -22,7 +22,7 @@ def update_image(dt):
         old_img = sprite.image
         sprite.delete()
     else:
-        old_img = pyglet.image.load("not_found.jpg")
+        old_img = pyglet.image.load("./not_found.jpg")
 
     new_imgs = set(get_image_paths(args.dir))
     if image_paths != new_imgs :

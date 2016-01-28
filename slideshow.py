@@ -19,20 +19,25 @@ def update_image(dt):
     global window
     global sprite
     if sprite is not None:
+        old_img = sprite.image
         sprite.delete()
+    else:
+        old_img = pyglet.image.load("not_found.jpg")
 
     new_imgs = set(get_image_paths(args.dir))
-    print(new_imgs)
     if image_paths != new_imgs :
         image_paths.clear()
         image_paths.update(new_imgs)
 
     next_img = choice(list(image_paths))
     img_feat = os.path.splitext(next_img)
-    if img_feat[1] == ".gif":
-        img = pyglet.image.load_animation(next_img)
-    else:
-        img = pyglet.image.load(next_img)
+    try:
+        if img_feat[1] == ".gif":
+            img = pyglet.image.load_animation(next_img)
+        else:
+            img = pyglet.image.load(next_img)
+    except:
+        img = old_img
     sprite = pyglet.sprite.Sprite(img)
     sprite.image = img
     sprite.scale = get_scale(window, img)

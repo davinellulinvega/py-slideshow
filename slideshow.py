@@ -8,16 +8,17 @@
 import argparse
 import os
 import pyglet
-from random import choice
 
 # Define global variables
 window = pyglet.window.Window(fullscreen=True)
 sprite = None
+current_idx = 0
 
 
 def update_image(dt):
     global window
     global sprite
+    global current_idx
     if sprite is not None:
         old_img = sprite.image
         sprite.delete()
@@ -29,7 +30,10 @@ def update_image(dt):
         image_paths.clear()
         image_paths.update(new_imgs)
 
-    next_img = choice(list(image_paths))
+    if current_idx >= len(image_paths):
+        current_idx = 0
+
+    next_img = list(image_paths)[current_idx]
     img_feat = os.path.splitext(next_img)
     try:
         if img_feat[1] == ".gif":
@@ -38,6 +42,7 @@ def update_image(dt):
             img = pyglet.image.load(next_img)
     except:
         img = old_img
+        print("Error while loading the image")
     sprite = pyglet.sprite.Sprite(img)
     sprite.image = img
     sprite.scale = get_scale(window, img)
@@ -46,6 +51,7 @@ def update_image(dt):
     sprite.x = pos_x
     sprite.y = pos_y
     window.clear()
+    current_idx += 1
 
 
 def get_image_paths(input_dir='.'):
@@ -60,7 +66,7 @@ def get_image_paths(input_dir='.'):
 
 def get_scale(win, image):
     if isinstance(image, pyglet.image.Animation):
-        if image.get_max_width() > image.get_max_height():
+        if image.get_max_width() >= image.get_max_height():
             scale = float(win.width) / image.get_max_width()
         else:
             scale = float(win.height) / image.get_max_height()

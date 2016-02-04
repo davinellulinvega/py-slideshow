@@ -65,13 +65,14 @@ def get_image_paths(input_dir='.'):
 
 
 def get_scale(win, image):
+    ratio = win.width / float(win.height)
     if isinstance(image, pyglet.image.Animation):
-        if image.get_max_width() >= image.get_max_height():
+        if image.get_max_width() > ratio * image.get_max_height():
             scale = float(win.width) / image.get_max_width()
         else:
             scale = float(win.height) / image.get_max_height()
     else:
-        if image.width > image.height:
+        if image.width > ratio * image.height:
             scale = float(win.width) / image.width
         else:
             scale = float(win.height) / image.height
